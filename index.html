@@ -1,0 +1,102 @@
+<html>
+    <head>
+        <title>Grid</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.2.1.min.js"></script>
+        <style>
+            body{
+                margin: 0;
+            }
+            .grid{
+                width: 200px;
+                height: 200px;
+                /*border: 1px solid;*/
+                /*display: inline-block;*/
+                float: left;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="wrapper">
+
+        </div>
+        <script>
+
+            function getRandomColor() {
+                var letters = '0123456789ABCDEF';
+                var color = '#';
+                for (var i = 0; i < 6; i++) {
+                    color += letters[Math.floor(Math.random() * 16)];
+                }
+                return color;
+            }
+
+            function getColRow() {
+                var w = $(window).width();
+                var h = $(window).height();
+                if(w==h){
+                    h++;
+                }
+                
+                var min_diff = w;
+                var col = 0, row = 0;
+                for (var i = 1; i <= 6; i++) { // col 
+                    for (var j = 1; j <= 6; j++) { //row
+                        var cw = w / i;
+                        var ch = h / j;
+                        
+                        var diff = cw - ch;
+                        if (diff < 0) {
+                            diff = diff * (-1);
+                        }
+
+                        if (min_diff > diff && cw > 150 ) {
+                            min_diff = diff;
+                            col = i;
+                            row = j;
+
+                        }
+                        console.log(i+'-'+j+'-'+cw+'-'+ch+'-'+diff);
+                    }
+                }
+                return {width: w / col, height: h / row, col: col, row: row};
+            }
+
+            $(function () {
+
+                $(".wrapper").html('');
+                var colRow = getColRow();
+                var total = colRow.col * colRow.row;
+                var html = '';
+                while (true) {
+                    total--;
+                    html += '<div class="grid" style="width:' + (colRow.width) + '; height:' + (colRow.height) + '; background:' + getRandomColor() + '"></div>'
+                    if (total == 0) {
+                        break;
+                    }
+                    
+                }
+                $(".wrapper").html(html);
+
+
+                $(window).resize(function () {
+                    $(".wrapper").html('');
+                    var colRow = getColRow();
+                    var total = colRow.col * colRow.row;
+                    var html = '';
+
+                    while (true) {
+                        total--;
+                        html += '<div class="grid" style="width:' + (colRow.width) + '; height:' + (colRow.height) + '; background:' + getRandomColor() + '"></div>'
+                        if (total == 0) {
+                            break;
+                        }
+                    }
+                    $(".wrapper").html(html);
+                });
+//                console.log(col + '-' + row + '-' + min_diff);
+            });
+        </script>
+    </body>
+</html>
